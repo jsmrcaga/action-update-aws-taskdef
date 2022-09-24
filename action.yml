@@ -1,0 +1,61 @@
+name: Update AWS TaskDefinition
+description: A simple action to download, update and deploy a new task definition to AWS ECS
+
+author: Jo Colina
+
+branding:
+  icon: cloud
+  color: orange
+
+inputs:
+  image:
+    required: true
+    description: The new image url:tag
+
+  family:
+    required: true
+    description: The task definition family
+
+  service:
+    required: true
+    description: The service to which deploy the task def
+
+  cluster:
+    required: true
+    description: The cluster the task def resides in
+
+  wait-for-service-stability:
+    reuired: false
+    default: false
+    description: Whether to wait for service stability after deploying
+
+  force-new-deployment:
+    required: false
+    default: true
+    description: Whether to deploy the service or not
+
+
+runs:
+  using: composite
+  steps:
+    - name: Download current task definition
+      run: |
+        aws ecs describe-task-definition \
+          --task-definition my-task-definition-family \
+          --query taskDefinition > current-task-definition.json
+
+    - name: Update task definition
+      id: taskdef-render
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: current-task-definition.json
+        image: ${{ inputs.image }}
+
+    - name: Deploy taskdef
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.taskdef-render.outputs.task-definition }}
+        service: ${{ inputs.service }}
+        cluster: ${{ inputs.cluster }}
+        wait-for-service-stability: ${{ inputs.wait-for-service-stability }}
+        force-new-deployment: ${{ inputs.force-new-deployment }}
