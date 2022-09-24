@@ -24,6 +24,10 @@ inputs:
     required: true
     description: The cluster the task def resides in
 
+  container-name:
+    required: true
+    description: The name of the container
+
   wait-for-service-stability:
     reuired: false
     default: false
@@ -49,6 +53,7 @@ runs:
       id: taskdef-render
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
+        container-name: ${{ inputs.container-name }}
         task-definition: current-task-definition.json
         image: ${{ inputs.image }}
 
