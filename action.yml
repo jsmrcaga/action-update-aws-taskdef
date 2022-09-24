@@ -39,6 +39,7 @@ runs:
   using: composite
   steps:
     - name: Download current task definition
+      shell: bash
       run: |
         aws ecs describe-task-definition \
           --task-definition my-task-definition-family \

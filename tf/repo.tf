@@ -10,4 +10,6 @@ module repo {
   description = "A simple composite action to update & deploy a new task definition"
 
   topics = ["aws"]
+
+  visibility = "public"
 }
