@@ -42,7 +42,7 @@ runs:
       shell: bash
       run: |
         aws ecs describe-task-definition \
-          --task-definition my-task-definition-family \
+          --task-definition ${{ inputs.family }} \
           --query taskDefinition > current-task-definition.json
 
     - name: Update task definition

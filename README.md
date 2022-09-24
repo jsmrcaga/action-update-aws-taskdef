@@ -16,7 +16,7 @@ jobs:
           docker build -t myimage:latest .
           docker push my_repo
 
-      - uses: jsmrcaga/action-update-aws-taskdef@v0.0.1
+      - uses: jsmrcaga/action-update-aws-taskdef@v0.0.3
         with:
           image: myimage:latest
           family: mytaskdef
